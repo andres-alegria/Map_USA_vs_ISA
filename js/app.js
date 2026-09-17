@@ -69,8 +69,12 @@
     } else if (key === 'ccz') {
       body = `<rect width="18" height="18" rx="4" fill="${L.water}"/>
         <rect width="18" height="18" rx="4" fill="${L.ccz.fill}" fill-opacity="${L.ccz.fillOpacity}"/>
-        <rect x="2.5" y="2.5" width="13" height="13" rx="2" fill="none"
-          stroke="${L.ccz.outline}" stroke-opacity="${L.ccz.outlineOpacity}" stroke-width="1.2"/>`;
+        <rect x="3" y="3" width="12" height="12" rx="1.5" fill="none"
+          stroke="${L.ccz.outline}" stroke-opacity="${L.ccz.outlineOpacity}" stroke-width="1"
+          stroke-dasharray="2.4 1.6"/>`;
+    } else if (key === 'eez') {
+      body = `<rect width="18" height="18" rx="4" fill="${L.water}"/>
+        <rect x="3" y="3" width="12" height="12" rx="1.5" fill="none" stroke="${L.eez.color}" stroke-width="1"/>`;
     }
     return `<svg class="swatch" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">${body}</svg>`;
   }
@@ -94,12 +98,14 @@
       </span>`;
     list.appendChild(row);
   });
-  // The CCZ is background only: listed in the legend, never switched off
-  const cczRow = document.createElement('div');
-  cczRow.className = 'layer is-static';
-  cczRow.innerHTML = `<span></span>${swatch('ccz')}
-    <span class="layer-text"><span class="layer-name">${esc(C.layers.ccz.label)}</span></span>`;
-  list.appendChild(cczRow);
+  // The CCZ and EEZ lines are background only: listed in the legend, never switched off
+  ['ccz', 'eez'].forEach((key) => {
+    const row = document.createElement('div');
+    row.className = 'layer is-static';
+    row.innerHTML = `<span></span>${swatch(key)}
+      <span class="layer-text"><span class="layer-name">${esc(C.layers[key].label)}</span></span>`;
+    list.appendChild(row);
+  });
   wireToggles();
 
   /* ------------------------------------------------------------ map */
@@ -209,7 +215,12 @@
     });
     map.addLayer({
       id: 'ccz-line', type: 'line', source: 'ccz',
-      paint: { 'line-color': L.ccz.outline, 'line-opacity': L.ccz.outlineOpacity, 'line-width': L.ccz.outlineWidth },
+      paint: {
+        'line-color': L.ccz.outline,
+        'line-opacity': L.ccz.outlineOpacity,
+        'line-width': L.ccz.outlineWidth,
+        'line-dasharray': L.ccz.outlineDash,
+      },
     });
 
     // ISA areas: washed-out solid grey

@@ -6,7 +6,7 @@ window.CONFIG = {
   /* ---- panel copy ------------------------------------------------------- */
   text: {
     title:
-      'US deep-sea mining applications competing with Internationally managed areas ' +
+      'US deep-sea mining applications competing with internationally managed areas ' +
       'within the Clarion Clipperton Zone',
     deck:
       'Several companies have applied under US law for exploration and exploitation of the ' +
@@ -36,10 +36,10 @@ window.CONFIG = {
 
   /* ---- basemap and view -------------------------------------------------- */
   map: {
-    // Same Mapbox style as the Whale Collisions story
-    style: 'mapbox://styles/mongabay/cmtkharki000k01qydbisf6f0',
-    // Layers in that style that belong to the whales story and are hidden here
-    hideStyleLayers: ['Slow_traffic', 'Medium_traffic', 'Fast_traffic'],
+    // Mongabay basemap for this story; it draws the EEZ boundaries itself
+    style: 'mapbox://styles/mongabay/cmu5trzhy000x01qsd5a6620a',
+    // Layers of that style to switch off, if a style ever carries some that don't belong here
+    hideStyleLayers: [],
     bounds: [[-161, -1], [-110, 24]],  // adjust the starting view here (west/south, east/north)
     padding: 16,                        // adjust space around the starting view (px)
     minZoom: 1.5,
@@ -82,7 +82,14 @@ window.CONFIG = {
       fillOpacity: 0.08,
       outline: '#FFFFFF',     // adjust CCZ outline color here
       outlineOpacity: 0.8,
-      outlineWidth: 1.2,
+      outlineWidth: 0.9,      // adjust CCZ outline thickness here
+      outlineDash: [3, 2],    // adjust dash and gap length here (multiples of the thickness)
+    },
+    eez: {
+      // Legend only: the EEZ lines come from the Mapbox style's "eez" layer,
+      // so keep this color in step with that layer
+      label: 'Exclusive economic zones',
+      color: '#A8A8A8',
     },
     hover: {
       color: '#092F29',       // adjust the outline of the area under the cursor here

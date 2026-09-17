@@ -19,9 +19,9 @@
   --panel-width: 400px;
   --gutter: 24px;
 
-  /* ---- logo: adjust size here (50px is Mongabay's minimum for the logomark) ---- */
-  --logo-size: 50px;
-  --logo-nudge: 0.14em;
+  /* ---- logo: sized to the title's letters, as on Mongabay's static graphics ---- */
+  --logo-size: 1em;          /* adjust logo size here (1em spans the title's tallest letters to its descenders) */
+  --logo-nudge: 0.146em;     /* lines the logo's top up with the top of the title's letters */
 }
 
 *,

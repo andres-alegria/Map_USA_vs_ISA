@@ -11,7 +11,7 @@ Clarion-Clipperton Zone (CCZ) overlap areas managed by the International Seabed 
   and the protected areas (APEIs).
 - **Overlaps** (red): every place where a US area overlaps an ISA area or another US area.
   Pieces under 50 km² are left out as digitising slivers.
-- **Clarion-Clipperton Zone** outline as background.
+- **Clarion-Clipperton Zone** dashed outline and **exclusive economic zone** lines as background.
 
 Hover over an area (tap on phones) for company, area name, status, area in km² and mi², and for US
 applications whether they have been posted in the Federal Register. A colored strip on each box says
@@ -27,8 +27,8 @@ python3 -m http.server 8000
 ```
 
 It needs a Mapbox public token. Copy `js/mapbox-token.example.js` to `js/mapbox-token.js` and paste
-the token there. That file is git-ignored, so the token never enters the repo. The basemap is the
-same Mongabay style used by the Whale Collisions story.
+the token there. That file is git-ignored, so the token never enters the repo. The basemap is a
+Mongabay Mapbox style made for this map, which also draws the EEZ boundaries.
 
 ## Editing
 
