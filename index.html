@@ -17,11 +17,13 @@
 <body>
   <div class="app">
     <aside class="panel" aria-label="About this map">
-      <h1 class="title" id="title"></h1>
+      <header class="panel-head">
+        <h1 class="title" id="title"></h1>
+        <img class="logo" src="img/mongabay-logomark.svg" alt="Mongabay" width="50" height="50">
+      </header>
       <p class="deck" id="deck"></p>
 
-      <fieldset class="layers">
-        <legend class="layers-heading" id="layers-heading"></legend>
+      <fieldset class="layers" aria-label="Map layers">
         <div id="layer-list"></div>
       </fieldset>
 
@@ -33,8 +35,8 @@
     </main>
 
     <footer class="foot">
+      <p id="footnote"></p>
       <p id="sources"></p>
-      <p id="credit"></p>
     </footer>
   </div>
 

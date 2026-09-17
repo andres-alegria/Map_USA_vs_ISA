@@ -15,7 +15,7 @@
   // Order sets hover priority: overlaps first, then US areas, then ISA areas.
   const CATEGORIES = [
     { key: 'overlaps', source: 'overlaps', query: 'overlap-fill', layers: ['overlap-fill', 'overlap-hover'] },
-    { key: 'us', source: 'us', query: 'us-fill', layers: ['us-fill', 'us-line', 'us-hover'] },
+    { key: 'us', source: 'us', query: 'us-fill', layers: ['us-fill', 'us-edge', 'us-hover'] },
     { key: 'isa', source: 'isa', query: 'isa-fill', layers: ['isa-fill', 'isa-line', 'isa-hover'] },
   ];
   const LEGEND_ORDER = ['us', 'isa', 'overlaps'];
@@ -34,31 +34,45 @@
 
   byId('title').textContent = C.text.title;
   byId('deck').textContent = C.text.deck;
-  byId('layers-heading').textContent = C.text.layersHeading;
   byId('hint').textContent = canHover ? C.text.hintHover : C.text.hintTap;
+  byId('footnote').textContent = C.text.footnote;
   byId('sources').textContent = C.text.sources;
-  byId('credit').textContent = C.text.credit;
+
+  // Layer colors from config, for the popup strips in css/style.css
+  const rootStyle = document.documentElement.style;
+  rootStyle.setProperty('--us-color', C.layers.us.color);
+  rootStyle.setProperty('--isa-color', C.layers.isa.fill);
+  rootStyle.setProperty('--overlap-color', C.layers.overlaps.fill);
 
   const esc = (s) => String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+  // Legend icons: rounded squares drawn the way each layer looks on the map
   function swatch(key) {
     const L = C.layers;
-    let mark = '';
+    let body = '';
     if (key === 'us') {
-      mark = `<rect x="6.5" y="5.5" width="19" height="11" fill="none" stroke="${L.us.color}"
-        stroke-width="1.6" stroke-dasharray="3 2"/>`;
+      const gap = L.us.hatchTile / Math.SQRT2;
+      body = `<defs>
+          <pattern id="swatch-hatch" width="${gap}" height="${gap}" patternUnits="userSpaceOnUse"
+            patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="${gap}" stroke="${L.us.color}" stroke-width="${L.us.hatchWidth * 2}"/>
+          </pattern>
+        </defs>
+        <rect x="0.5" y="0.5" width="17" height="17" rx="3.5" fill="url(#swatch-hatch)"
+          stroke="${L.us.color}" stroke-width="${L.us.edgeWidth > 0 ? 1 : 0}"/>`;
     } else if (key === 'isa') {
-      mark = `<rect x="6" y="5" width="20" height="12" fill="${L.isa.fill}" fill-opacity="${L.isa.fillOpacity}"
-        stroke="${L.isa.outline}" stroke-width="0.8"/>`;
+      body = `<rect x="0.5" y="0.5" width="17" height="17" rx="3.5" fill="${L.isa.fill}"
+        stroke="${L.isa.outline}" stroke-width="1"/>`;
     } else if (key === 'overlaps') {
-      mark = `<rect x="6" y="5" width="20" height="12" fill="${L.overlaps.fill}"/>`;
+      body = `<rect width="18" height="18" rx="4" fill="${L.overlaps.fill}"/>`;
     } else if (key === 'ccz') {
-      mark = `<rect x="6.5" y="5.5" width="19" height="11" fill="${L.ccz.fill}" fill-opacity="${L.ccz.fillOpacity * 2}"
-        stroke="${L.ccz.outline}" stroke-opacity="${L.ccz.outlineOpacity}" stroke-width="1.2"/>`;
+      body = `<rect width="18" height="18" rx="4" fill="${L.water}"/>
+        <rect width="18" height="18" rx="4" fill="${L.ccz.fill}" fill-opacity="${L.ccz.fillOpacity}"/>
+        <rect x="2.5" y="2.5" width="13" height="13" rx="2" fill="none"
+          stroke="${L.ccz.outline}" stroke-opacity="${L.ccz.outlineOpacity}" stroke-width="1.2"/>`;
     }
-    return `<svg class="swatch" width="32" height="22" viewBox="0 0 32 22" aria-hidden="true">
-      <rect width="32" height="22" rx="4" fill="${L.legendWater}"/>${mark}</svg>`;
+    return `<svg class="swatch" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">${body}</svg>`;
   }
 
   const CHECK = `<svg width="11" height="9" viewBox="0 0 11 9" aria-hidden="true">
@@ -158,6 +172,26 @@
     }).catch((err) => console.error('Could not load map data', err));
   });
 
+  // One tile of thin diagonal lines, drawn at 2x for sharp screens
+  function hatchTile(color, tile, width) {
+    const ratio = 2;
+    const px = tile * ratio;
+    const canvas = document.createElement('canvas');
+    canvas.width = px;
+    canvas.height = px;
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width * ratio;
+    ctx.beginPath();
+    // the diagonal plus its two corner pieces, so neighbouring tiles join up
+    [[0, px, px, 0], [-px, px, px, -px], [0, 2 * px, 2 * px, 0]].forEach(([x1, y1, x2, y2]) => {
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+    });
+    ctx.stroke();
+    return { image: ctx.getImageData(0, 0, px, px), pixelRatio: ratio };
+  }
+
   function addLayers(ccz, us, isa, overlaps) {
     const L = C.layers;
     const hovered = ['boolean', ['feature-state', 'hover'], false];
@@ -188,24 +222,24 @@
       paint: { 'line-color': L.isa.outline, 'line-width': L.isa.outlineWidth },
     });
 
-    // Overlaps: the accent
+    // US areas: thin diagonal hatching in one color
+    const hatch = hatchTile(L.us.color, L.us.hatchTile, L.us.hatchWidth);
+    map.addImage('us-hatch', hatch.image, { pixelRatio: hatch.pixelRatio });
+    map.addLayer({
+      id: 'us-fill', type: 'fill', source: 'us', layout: { visibility: vis('us') },
+      paint: { 'fill-pattern': 'us-hatch' },
+    });
+
+    // Overlaps: the accent, solid over the hatching
     map.addLayer({
       id: 'overlap-fill', type: 'fill', source: 'overlaps', layout: { visibility: vis('overlaps') },
       paint: { 'fill-color': L.overlaps.fill, 'fill-opacity': L.overlaps.fillOpacity },
     });
 
-    // US areas: one color, dashed. The fill is invisible and only catches the pointer.
+    // Hairline edge of the US areas, kept visible across the overlaps
     map.addLayer({
-      id: 'us-fill', type: 'fill', source: 'us', layout: { visibility: vis('us') },
-      paint: { 'fill-color': L.us.color, 'fill-opacity': 0 },
-    });
-    map.addLayer({
-      id: 'us-line', type: 'line', source: 'us', layout: { visibility: vis('us') },
-      paint: {
-        'line-color': L.us.color,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 2, L.us.width[0], 7, L.us.width[1]],
-        'line-dasharray': L.us.dash,
-      },
+      id: 'us-edge', type: 'line', source: 'us', layout: { visibility: vis('us') },
+      paint: { 'line-color': L.us.color, 'line-width': L.us.edgeWidth, 'line-opacity': L.us.edgeWidth > 0 ? 1 : 0 },
     });
 
     // Outline of the area under the cursor
@@ -241,17 +275,37 @@
   const fmt = (n) => Number(n).toLocaleString('en-US');
   const areaText = (p) => `${fmt(p.area_km2)} km² (${fmt(p.area_mi2)} mi²)`;
 
+  // Federal Register line for a US application, or null to leave it out
+  function federalRegister(company, areaName) {
+    const fr = company.federalRegister;
+    if (fr === undefined) return null;
+    let date = fr;
+    if (fr && typeof fr === 'object') {
+      const prefix = Object.keys(fr).find((k) => (areaName || '').startsWith(k));
+      date = prefix ? fr[prefix] : false;
+    }
+    return date ? C.labels.posted.replace('{date}', date) : C.labels.notPosted;
+  }
+
   function describe(p) {
     if (p.group === 'us') {
       const co = C.companies[p.company] || { name: p.company };
-      return { title: co.name, body: C.governingBodies.us, status: co.status };
+      return {
+        group: 'us',
+        title: co.name,
+        body: C.governingBodies.us,
+        status: co.status,
+        federalRegister: federalRegister(co, p.area_name),
+      };
     }
     const kind = C.isaKinds[p.kind] || {};
     const co = p.company ? C.companies[p.company] || { name: p.company } : null;
     return {
+      group: 'isa',
       title: co ? co.name : kind.title,
       body: C.governingBodies.isa,
       status: (co && co.status) || kind.status,
+      federalRegister: null,
     };
   }
 
@@ -259,12 +313,13 @@
     const d = describe(p);
     const row = (label, value, cls = '') => (value
       ? `<dt>${esc(label)}</dt><dd class="${cls}">${esc(value)}</dd>` : '');
-    return `<div class="pop-item">
+    return `<div class="pop-item is-${d.group}">
+      <div class="pop-band">${esc(d.group === 'us' ? C.labels.usBand : C.labels.isaBand)}</div>
       <h3 class="pop-title">${esc(d.title)}</h3>
       <dl class="pop-rows">
         ${row(C.labels.areaName, p.area_name)}
-        ${row(C.labels.governingBody, d.body)}
         ${row(C.labels.status, d.status)}
+        ${row(C.labels.federalRegister, d.federalRegister)}
         ${row(C.labels.area, areaText(p), 'nowrap')}
       </dl></div>`;
   }
@@ -276,8 +331,8 @@
       const meta = [m.area_name, d.body].filter(Boolean).join(' · ');
       return `<li><span class="m-company">${esc(d.title)}</span><span class="m-meta">${esc(meta)}</span></li>`;
     }).join('');
-    return `<div class="pop-item">
-      <h3 class="pop-title">${esc(C.labels.overlap)}</h3>
+    return `<div class="pop-item is-overlap">
+      <div class="pop-band">${esc(C.labels.overlapBand)}</div>
       <dl class="pop-rows"><dt>${esc(C.labels.area)}</dt><dd class="nowrap">${esc(areaText(p))}</dd></dl>
       <ul class="pop-members">${items}</ul></div>`;
   }
@@ -306,7 +361,7 @@
     closeButton: !canHover,
     closeOnClick: false,
     offset: 14,
-    maxWidth: '290px',
+    maxWidth: '310px',
     className: 'area-popup' + (canHover ? ' is-hover' : ''),
   });
 
@@ -328,6 +383,9 @@
       current = { ...hit, key };
       setHover(current, true);
       popup.setHTML(popupHTML(hit));
+      // lets the close button match the strip it sits on
+      CATEGORIES.forEach((c) => popup.removeClassName(`shows-${c.key}`));
+      popup.addClassName(`shows-${hit.cat.key}`);
     }
     popup.setLngLat(lngLat);
     if (!popup.isOpen()) popup.addTo(map);

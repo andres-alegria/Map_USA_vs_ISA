@@ -10,14 +10,18 @@
   /* ---- type: adjust fonts and sizes here ---- */
   --font-title: 'Rowan', Georgia, 'Times New Roman', serif;
   --font-text: 'Public Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --size-title: 1.6rem;
+  --size-title: 1.5rem;
   --size-deck: 0.95rem;
   --size-body: 0.92rem;
   --size-small: 0.8rem;
 
   /* ---- layout: adjust panel width and spacing here ---- */
-  --panel-width: 360px;
+  --panel-width: 400px;
   --gutter: 24px;
+
+  /* ---- logo: adjust size here (50px is Mongabay's minimum for the logomark) ---- */
+  --logo-size: 50px;
+  --logo-nudge: 0.14em;
 }
 
 *,
@@ -78,14 +82,34 @@ body {
   margin: 0 0 4px;
 }
 
+.foot p:empty {
+  display: none;
+}
+
 /* ---- panel copy ---- */
+.panel-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 16px;               /* adjust space between title and logo here */
+  align-items: start;
+  margin-bottom: 10px;
+  font-size: var(--size-title);   /* lets the logo nudge below scale with the title */
+}
+
 .title {
-  margin: 0 0 10px;
+  margin: 0;
   font-family: var(--font-title);
   font-weight: 400;
   font-size: var(--size-title);
   line-height: 1.1;
   letter-spacing: -0.02em;
+}
+
+.logo {
+  display: block;
+  width: var(--logo-size);
+  height: auto;
+  margin-top: var(--logo-nudge);  /* lines the logo up with the top of the title's letters */
 }
 
 .deck {
@@ -104,17 +128,9 @@ body {
   min-width: 0;
 }
 
-.layers-heading {
-  padding: 0;
-  margin-bottom: 6px;
-  font-size: var(--size-small);
-  font-weight: 500;
-  color: var(--ink-muted);
-}
-
 .layer {
   display: grid;
-  grid-template-columns: 18px 32px minmax(0, 1fr);
+  grid-template-columns: 18px 18px minmax(0, 1fr);
   column-gap: 10px;
   align-items: start;
   padding: 8px 0;
@@ -168,7 +184,7 @@ body {
 
 .swatch {
   display: block;
-  margin-top: 0;
+  margin-top: 1px;
   transition: opacity 0.15s ease;
 }
 
@@ -227,25 +243,60 @@ body {
   display: none;
 }
 
+.area-popup .mapboxgl-popup-content {
+  overflow: hidden;             /* clips the colored strip to the rounded corners */
+}
+
 .area-popup .mapboxgl-popup-close-button {
-  top: 4px;
-  right: 4px;
+  top: 2px;
+  right: 3px;
   width: 24px;
   height: 24px;
   font-size: 18px;
   line-height: 1;
-  color: var(--ink-muted);
+  color: var(--ink);
   border-radius: 4px;
 }
 
+.area-popup.shows-us .mapboxgl-popup-close-button {
+  color: #FFFFFF;
+}
+
+/* colored strip naming who manages the area */
+.pop-band {
+  margin: -10px -12px 8px;
+  padding: 5px 34px 5px 12px;
+  font-size: 0.74rem;           /* adjust strip text size here */
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+.is-us .pop-band {
+  background: var(--us-color);
+  color: #FFFFFF;               /* adjust US strip text color here */
+}
+
+.is-isa .pop-band {
+  background: var(--isa-color);
+  color: var(--ink);
+}
+
+.is-overlap .pop-band {
+  background: var(--overlap-color);
+  color: var(--ink);
+}
+
 .pop-item + .pop-item {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--rule);
+  margin-top: 10px;
+}
+
+.pop-item + .pop-item .pop-band {
+  margin-top: 0;
 }
 
 .pop-title {
-  margin: 0 18px 6px 0;
+  margin: 0 0 6px;
   font-size: 0.9rem;            /* adjust popup title size here */
   font-weight: 600;
   line-height: 1.25;
@@ -263,6 +314,7 @@ body {
 
 .pop-rows dt {
   color: var(--ink-muted);
+  white-space: nowrap;
 }
 
 .pop-rows dd {

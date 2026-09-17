@@ -5,15 +5,17 @@ Clarion-Clipperton Zone (CCZ) overlap areas managed by the International Seabed 
 
 ## What the map shows
 
-- **US application areas** (dashed): The Metals Company (TMC USA), American Metal Resources, SEAX,
-  American Ocean Minerals, Eco Minerals, and Lockheed Martin's existing licences.
+- **US application areas** (hatched): The Metals Company (TMC USA), American Metal Resources, SEAX,
+  American Ocean Minerals, Eco Minerals, and the two exploration licenses held by Lockheed Martin.
 - **ISA managed areas** (grey): exploration contracts, reserved areas, Impossible Metals' application
   and the protected areas (APEIs).
 - **Overlaps** (red): every place where a US area overlaps an ISA area or another US area.
   Pieces under 50 km² are left out as digitising slivers.
 - **Clarion-Clipperton Zone** outline as background.
 
-Hover over an area (tap on phones) for company, area name, governing body, status and area in km² and mi².
+Hover over an area (tap on phones) for company, area name, status, area in km² and mi², and for US
+applications whether they have been posted in the Federal Register. A colored strip on each box says
+whether it is a US application area or an ISA managed area.
 Areas and features stay undissolved, one per subarea.
 
 ## Run locally

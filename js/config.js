@@ -5,29 +5,34 @@
 window.CONFIG = {
   /* ---- panel copy ------------------------------------------------------- */
   text: {
-    title: 'US deep-sea mining applications overlap areas managed by the ISA',
+    title:
+      'US deep-sea mining applications competing with Internationally managed areas ' +
+      'within the Clarion Clipperton Zone',
     deck:
-      'Companies have applied under US law for 725,197 km² (280,000 mi²) of the ' +
-      'Clarion-Clipperton Zone, in the Pacific Ocean. Of that, 228,832 km² (88,353 mi²) ' +
-      'lies on exploration contracts or reserved areas of the International Seabed Authority (ISA).',
-    layersHeading: 'Show on the map',
+      'Several companies have applied under US law for exploration and exploitation of the ' +
+      'Clarion-Clipperton Zone, in the Pacific Ocean. A significant overlap lies on areas ' +
+      'managed by the International Seabed Authority (ISA).',
     hintHover: 'Hover over an area to see its details.',
     hintTap: 'Tap an area to see its details.',
+    footnote: '*Includes two exploration licenses granted in 1984, now held by Lockheed Martin.',
     sources:
       'Sources: International Seabed Authority; NOAA and Federal Register notices; company documents.',
-    credit: 'Map: Andrés Alegría / Mongabay',
     missingToken: 'The map needs a Mapbox access token. See README.md.',
   },
 
   /* ---- popup labels ------------------------------------------------------ */
   labels: {
+    usBand: 'US application area',    // colored strip at the top of US popups
+    isaBand: 'ISA managed area',      // colored strip at the top of ISA popups
+    overlapBand: 'Overlap',           // colored strip at the top of overlap popups
     areaName: 'Area name',
-    governingBody: 'Governing body',
     status: 'Status',
+    federalRegister: 'Federal Register',
+    posted: 'Posted {date}',
+    notPosted: 'Not posted yet',
     area: 'Area',
-    overlap: 'Overlap',
   },
-  governingBodies: { us: 'US', isa: 'ISA' },
+  governingBodies: { us: 'US', isa: 'ISA' }, // named after each area in overlap popups
 
   /* ---- basemap and view -------------------------------------------------- */
   map: {
@@ -47,11 +52,12 @@ window.CONFIG = {
   /* ---- layer styles and legend ------------------------------------------ */
   layers: {
     us: {
-      label: 'US application areas',
-      note: 'Applications and licences under US law',
-      color: '#530E0D',       // adjust US outline color here
-      width: [1.3, 2.4],      // adjust outline width here (at zoom 2 and zoom 7)
-      dash: [2.2, 1.3],       // adjust dash and gap length here (multiples of the width)
+      label: 'US application areas*',
+      note: 'Applications and licenses under US law',
+      color: '#530E0D',       // adjust US hatch color here (also the US popup strip)
+      hatchTile: 7,           // adjust the gap between hatch lines here (px, larger is sparser)
+      hatchWidth: 1,          // adjust hatch line thickness here (px)
+      edgeWidth: 0.6,         // adjust the hairline around US areas here (0 removes it)
       visible: true,
     },
     isa: {
@@ -67,7 +73,7 @@ window.CONFIG = {
       label: 'Overlaps',
       note: 'US areas overlapping ISA areas or each other, over 50 km² (19 mi²)',
       fill: '#E86D6D',        // adjust overlap color here
-      fillOpacity: 0.95,
+      fillOpacity: 1,
       visible: true,
     },
     ccz: {
@@ -82,18 +88,25 @@ window.CONFIG = {
       color: '#092F29',       // adjust the outline of the area under the cursor here
       width: 2.5,
     },
-    legendWater: '#428A94',   // ocean color behind the legend swatches; match the basemap
+    water: '#428A94',         // basemap ocean color, used for the CCZ legend icon
   },
 
   /* ---- names and statuses ------------------------------------------------ */
   // Keys match the "company" property in data/us_areas.geojson and data/isa_areas.geojson.
   companies: {
-    // US applicants and licence holders
-    TMC: { name: 'The Metals Company (TMC USA)', status: 'Applied' },
-    AMR: { name: 'American Metal Resources', status: 'Applied' },
-    SEAX: { name: 'SEAX', status: 'Applied' },
-    AOM: { name: 'American Ocean Minerals', status: 'Applied' },
-    ECO: { name: 'Eco Minerals', status: 'Applied' },
+    // US applicants and license holders.
+    // federalRegister: month and year the application was posted in the Federal Register,
+    // false if not posted yet, or dates per application keyed by the start of the area name.
+    // Leave it out to skip that line (Lockheed Martin holds licenses, not applications).
+    TMC: {
+      name: 'The Metals Company (TMC USA)',
+      status: 'Applied',
+      federalRegister: { 'USA-A': 'August 2026', 'USA-B': 'December 2025' },
+    },
+    AMR: { name: 'American Metal Resources', status: 'Applied', federalRegister: 'March 2026' },
+    SEAX: { name: 'SEAX', status: 'Applied', federalRegister: 'March 2026' },
+    AOM: { name: 'American Ocean Minerals', status: 'Applied', federalRegister: false },
+    ECO: { name: 'Eco Minerals', status: 'Applied', federalRegister: false },
     LM: { name: 'Lockheed Martin', status: 'Granted' },
 
     // ISA applicant
