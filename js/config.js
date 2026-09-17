@@ -71,7 +71,7 @@ window.CONFIG = {
     },
     overlaps: {
       label: 'Overlaps',
-      note: 'US areas overlapping ISA areas or each other, over 50 km² (19 mi²)',
+      note: 'US areas overlapping ISA areas or each other',
       fill: '#E86D6D',        // adjust overlap color here
       fillOpacity: 1,
       visible: true,
