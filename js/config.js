@@ -25,6 +25,7 @@ window.CONFIG = {
     usBand: 'US application area',    // colored strip at the top of US popups
     isaBand: 'ISA managed area',      // colored strip at the top of ISA popups
     overlapBand: 'Overlap',           // colored strip at the top of overlap popups
+    company: 'Company:',
     areaName: 'Area name',
     status: 'Status',
     federalRegister: 'Federal Register',

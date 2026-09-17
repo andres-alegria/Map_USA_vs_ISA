@@ -304,6 +304,7 @@
       return {
         group: 'us',
         title: co.name,
+        isCompany: true,
         body: C.governingBodies.us,
         status: co.status,
         federalRegister: federalRegister(co, p.area_name),
@@ -314,6 +315,7 @@
     return {
       group: 'isa',
       title: co ? co.name : kind.title,
+      isCompany: Boolean(co), // reserved areas and APEIs have no company
       body: C.governingBodies.isa,
       status: (co && co.status) || kind.status,
       federalRegister: null,
@@ -326,6 +328,7 @@
       ? `<dt>${esc(label)}</dt><dd class="${cls}">${esc(value)}</dd>` : '');
     return `<div class="pop-item is-${d.group}">
       <div class="pop-band">${esc(d.group === 'us' ? C.labels.usBand : C.labels.isaBand)}</div>
+      ${d.isCompany ? `<p class="pop-label">${esc(C.labels.company)}</p>` : ''}
       <h3 class="pop-title">${esc(d.title)}</h3>
       <dl class="pop-rows">
         ${row(C.labels.areaName, p.area_name)}

@@ -295,6 +295,14 @@ body {
   margin-top: 0;
 }
 
+/* "Company:" label, styled like the row labels ("Area name") */
+.pop-label {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--ink-muted);
+}
+
 .pop-title {
   margin: 0 0 6px;
   font-size: 0.9rem;            /* adjust popup title size here */
