@@ -181,9 +181,15 @@ def main(data_dir):
     for slug, fname, key in US_LAYERS:
         for i, (items, g) in enumerate(read_layer(os.path.join(data_dir, 'US_Areas_CCZ', fname)), 1):
             fid = f'us-{key.lower()}-{i}'
-            us.append((fid, with_area({'group': 'us', 'company': key,
-                                       'area_name': us_area_name(key, items.get('subarea'))}, g), g))
+            props = with_area({'group': 'us', 'company': key,
+                               'area_name': us_area_name(key, items.get('subarea'))}, g)
+            # an area drawn mostly beyond the CCZ boundary; the map says so in its popup
+            if area_km2(polys_only(g.Intersection(ccz))) < area_km2(g) / 2:
+                props['outside_ccz'] = True
+            us.append((fid, props, g))
     write('us_areas.geojson', [feature(fid, p, g) for fid, p, g in us])
+    outside = [fid for fid, p, _ in us if p.get('outside_ccz')]
+    print(f'  areas outside the CCZ: {len(outside)} {outside}')
 
     # ISA areas
     isa = []

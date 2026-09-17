@@ -208,19 +208,10 @@
     map.addSource('us', { type: 'geojson', data: us, promoteId: 'id' });
     map.addSource('overlaps', { type: 'geojson', data: overlaps, promoteId: 'id' });
 
-    // CCZ background
+    // CCZ background tint; its outline goes on top of everything, further down
     map.addLayer({
       id: 'ccz-fill', type: 'fill', source: 'ccz',
       paint: { 'fill-color': L.ccz.fill, 'fill-opacity': L.ccz.fillOpacity },
-    });
-    map.addLayer({
-      id: 'ccz-line', type: 'line', source: 'ccz',
-      paint: {
-        'line-color': L.ccz.outline,
-        'line-opacity': L.ccz.outlineOpacity,
-        'line-width': L.ccz.outlineWidth,
-        'line-dasharray': L.ccz.outlineDash,
-      },
     });
 
     // ISA areas: washed-out solid grey
@@ -265,6 +256,17 @@
     hoverLine('isa-hover', 'isa', L.hover.color, 'isa');
     hoverLine('overlap-hover', 'overlaps', L.hover.color, 'overlaps');
     hoverLine('us-hover', 'us', L.us.color, 'us');
+
+    // The CCZ boundary sits above the areas, so the reader can see which of them it contains
+    map.addLayer({
+      id: 'ccz-line', type: 'line', source: 'ccz',
+      paint: {
+        'line-color': L.ccz.outline,
+        'line-opacity': L.ccz.outlineOpacity,
+        'line-width': L.ccz.outlineWidth,
+        'line-dasharray': L.ccz.outlineDash,
+      },
+    });
   }
 
   function wireToggles() {
@@ -335,7 +337,8 @@
         ${row(C.labels.status, d.status)}
         ${row(C.labels.federalRegister, d.federalRegister)}
         ${row(C.labels.area, areaText(p), 'nowrap')}
-      </dl></div>`;
+      </dl>
+      ${p.outside_ccz ? `<p class="pop-note">${esc(C.text.outsideCcz)}</p>` : ''}</div>`;
   }
 
   function overlapHTML(p) {

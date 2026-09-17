@@ -15,6 +15,8 @@ window.CONFIG = {
     hintHover: 'Hover over an area to see its details.',
     hintTap: 'Tap an area to see its details.',
     footnote: '*Includes two exploration licenses granted in 1984, now held by Lockheed Martin.',
+    // shown in the popup of any area drawn outside the CCZ boundary
+    outsideCcz: 'This is the only area on this map that falls outside the Clarion Clipperton Zone.',
     sources:
       'Sources: International Seabed Authority; NOAA and Federal Register notices; company documents.',
     missingToken: 'The map needs a Mapbox access token. See README.md.',
@@ -83,7 +85,7 @@ window.CONFIG = {
       fillOpacity: 0.08,
       outline: '#FFFFFF',     // adjust CCZ outline color here
       outlineOpacity: 0.8,
-      outlineWidth: 0.9,      // adjust CCZ outline thickness here
+      outlineWidth: 1.1,      // adjust CCZ outline thickness here
       outlineDash: [3, 2],    // adjust dash and gap length here (multiples of the thickness)
     },
     eez: {
