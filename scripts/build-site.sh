@@ -10,7 +10,7 @@ fi
 
 rm -rf dist
 mkdir -p dist
-cp -R index.html css js data dist/
+cp -R index.html css js img data dist/
 rm -f dist/js/mapbox-token.example.js
 printf 'window.MAPBOX_ACCESS_TOKEN = "%s";\n' "$MAPBOX_ACCESS_TOKEN" > dist/js/mapbox-token.js
 echo "Built dist/"
