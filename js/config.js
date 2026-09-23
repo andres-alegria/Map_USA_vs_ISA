@@ -135,11 +135,12 @@ window.CONFIG = {
       federalRegister: 'March 2026',
     },
     AOM: {
-      // UNRESOLVED: two unrelated companies have used this name. Our subareas match
-      // AOM Area-1 LLC, of American Ocean Minerals Corporation, but the source link
-      // points at Deep Sea Minerals Corp. Confirm before publishing.
-      name: 'American Ocean Minerals',
-      parent: 'To be confirmed',
+      // Confirmed 23 Sep 2026: the polygons come from the company's own licence-areas map
+      // (aomusa.com/license-areas), so this is American Ocean Minerals Corporation of Tampa,
+      // not the unrelated Deep Sea Minerals Corp., whose US subsidiary carried the same name
+      // until 9 Apr 2026. Its merger with Odyssey Marine Exploration was still pending.
+      name: 'American Ocean Minerals Corporation',
+      parent: 'Merging into Odyssey Marine Exploration (Nasdaq: OMEX)',
       authority: 'United States (NOAA)',
       status: 'Applied',
       federalRegister: false,
