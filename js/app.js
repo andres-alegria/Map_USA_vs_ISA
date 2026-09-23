@@ -308,6 +308,10 @@
         title: co.name,
         isCompany: true,
         body: C.governingBodies.us,
+        parent: co.parent,
+        // US applicants answer to NOAA; a sponsoring state is the ISA's arrangement
+        stateLabel: C.labels.authority,
+        state: co.authority,
         status: co.status,
         federalRegister: federalRegister(co, p.area_name),
       };
@@ -319,6 +323,9 @@
       title: co ? co.name : kind.title,
       isCompany: Boolean(co), // reserved areas and APEIs have no company
       body: C.governingBodies.isa,
+      parent: co && co.parent,
+      stateLabel: C.labels.sponsor,
+      state: co && co.sponsor,
       status: (co && co.status) || kind.status,
       federalRegister: null,
     };
@@ -333,6 +340,8 @@
       ${d.isCompany ? `<p class="pop-label">${esc(C.labels.company)}</p>` : ''}
       <h3 class="pop-title">${esc(d.title)}</h3>
       <dl class="pop-rows">
+        ${row(C.labels.parent, d.parent)}
+        ${row(d.stateLabel, d.state)}
         ${row(C.labels.areaName, p.area_name)}
         ${row(C.labels.status, d.status)}
         ${row(C.labels.federalRegister, d.federalRegister)}

@@ -28,6 +28,9 @@ window.CONFIG = {
     isaBand: 'ISA managed area',      // colored strip at the top of ISA popups
     overlapBand: 'Overlap',           // colored strip at the top of overlap popups
     company: 'Company:',
+    parent: 'Parent or owner',
+    sponsor: 'Sponsoring state',      // ISA areas
+    authority: 'Licensing authority', // US areas, which have no sponsoring state
     areaName: 'Area name',
     status: 'Status',
     federalRegister: 'Federal Register',
@@ -104,42 +107,121 @@ window.CONFIG = {
   /* ---- names and statuses ------------------------------------------------ */
   // Keys match the "company" property in data/us_areas.geojson and data/isa_areas.geojson.
   companies: {
-    // US applicants and license holders.
+    // US applicants and license holders, as the Federal Register and the companies' own
+    // applications name them (fact-checked 23 Sep 2026; see the project's
+    // Stuff/entity_names_factcheck.xlsx for sources and open questions).
     // federalRegister: month and year the application was posted in the Federal Register,
     // false if not posted yet, or dates per application keyed by the start of the area name.
     // Leave it out to skip that line (Lockheed Martin holds licenses, not applications).
     TMC: {
-      name: 'The Metals Company (TMC USA)',
+      name: 'The Metals Company USA, LLC',
+      parent: 'TMC the metals company Inc.',
+      authority: 'United States (NOAA)',
       status: 'Applied',
       federalRegister: { 'USA-A': 'August 2026', 'USA-B': 'December 2025' },
     },
-    AMR: { name: 'American Metal Resources', status: 'Applied', federalRegister: 'March 2026' },
-    SEAX: { name: 'SEAX', status: 'Applied', federalRegister: 'March 2026' },
-    AOM: { name: 'American Ocean Minerals', status: 'Applied', federalRegister: false },
-    ECO: { name: 'Eco Minerals', status: 'Applied', federalRegister: false },
-    LM: { name: 'Lockheed Martin', status: 'Granted' },
+    AMR: {
+      name: 'American Metal Resources, LLC',
+      parent: 'American Metal Inc.',
+      authority: 'United States (NOAA)',
+      status: 'Applied',
+      federalRegister: 'March 2026',
+    },
+    SEAX: {
+      name: 'SeaX, Inc.',
+      parent: 'American Metal Inc.',   // the same parent as American Metal Resources
+      authority: 'United States (NOAA)',
+      status: 'Applied',
+      federalRegister: 'March 2026',
+    },
+    AOM: {
+      // UNRESOLVED: two unrelated companies have used this name. Our subareas match
+      // AOM Area-1 LLC, of American Ocean Minerals Corporation, but the source link
+      // points at Deep Sea Minerals Corp. Confirm before publishing.
+      name: 'American Ocean Minerals',
+      parent: 'To be confirmed',
+      authority: 'United States (NOAA)',
+      status: 'Applied',
+      federalRegister: false,
+    },
+    ECO: {
+      name: 'Eco Minerals, Inc.',
+      parent: 'None; formerly Deep Sea Rare Minerals, Inc.',
+      authority: 'United States (NOAA)',
+      status: 'Applied',
+      federalRegister: false,
+    },
+    LM: {
+      name: 'Lockheed Martin Corporation',
+      authority: 'United States (NOAA)',
+      status: 'Granted',
+    },
 
-    // ISA applicant
-    IM: { name: 'Impossible Metals', status: 'Applied' },
+    // ISA applicant: the US cannot sponsor at the ISA, so the American parent applied
+    // through a Bahraini subsidiary
+    IM: {
+      name: 'Impossible Metals Bahrain W.L.L.',
+      parent: 'Impossible Metals Inc.',
+      sponsor: 'Bahrain',
+      status: 'Applied; deferred by the ISA to 2027',
+    },
 
-    // ISA exploration contractors, keyed by ISA contract ID (sponsoring state in brackets)
-    BGRPMN1: { name: 'Federal Institute for Geosciences and Natural Resources (Germany)' },
-    BMJPMN1: { name: 'Blue Minerals Jamaica (Jamaica)' },
-    CIICPMN1: { name: 'Cook Islands Investment Corporation (Cook Islands)' },
-    CMMPMN1: { name: 'China Minmetals Corporation (China)' },
-    COMRAPMN1: { name: 'China Ocean Mineral Resources R&D Association (China)' },
-    DORDPMN1: { name: 'Deep Ocean Resources Development (Japan)' },
-    GSRPMN1: { name: 'Global Sea Mineral Resources (Belgium)' },
-    IFREMERPMN1: { name: 'Ifremer (France)' },
-    IOMPMN1: { name: 'Interoceanmetal Joint Organization (Bulgaria, Cuba, Czechia, Poland, Russia, Slovakia)' },
-    KOREAPMN1: { name: 'Government of the Republic of Korea' },
-    MARAWAPMN1: { name: 'Marawa Research and Exploration (Kiribati)' },
-    NORIPMN1: { name: 'Nauru Ocean Resources (Nauru)' },
-    OMSPMN1: { name: 'Ocean Mineral Singapore (Singapore)' },
-    TOMLPMN1: { name: 'Tonga Offshore Mining (Tonga)' },
-    UKSRLPMN1: { name: 'UK Seabed Resources (United Kingdom)' },
-    UKSRLPMN2: { name: 'UK Seabed Resources (United Kingdom)' },
-    YUZHPMN1: { name: 'Yuzhmorgeologiya (Russia)' },
+    // ISA exploration contractors, keyed by ISA contract ID. Names follow ISA's own
+    // register (ISBA/31/C/3 Annex I, 9 Feb 2026); owners come from company filings.
+    BGRPMN1: {
+      name: 'Federal Institute for Geosciences and Natural Resources (BGR)',
+      parent: 'German federal agency',
+      sponsor: 'Germany',
+    },
+    BMJPMN1: { name: 'Blue Minerals Jamaica Ltd.', parent: 'Allseas Group', sponsor: 'Jamaica' },
+    CIICPMN1: {
+      name: 'Cook Islands Investment Corporation',
+      parent: 'Cook Islands government body',
+      sponsor: 'Cook Islands',
+    },
+    CMMPMN1: { name: 'China Minmetals Corporation', parent: 'Chinese state enterprise', sponsor: 'China' },
+    COMRAPMN1: {
+      name: 'China Ocean Mineral Resources Research and Development Association',
+      parent: 'Chinese state body',
+      sponsor: 'China',
+    },
+    DORDPMN1: {
+      name: 'Deep Ocean Resources Development Co. Ltd.',
+      parent: 'JOGMEC, with 43 private companies',
+      sponsor: 'Japan',
+    },
+    GSRPMN1: { name: 'Global Sea Mineral Resources NV', parent: 'DEME Group', sponsor: 'Belgium' },
+    IFREMERPMN1: {
+      name: 'Institut français de recherche pour l\'exploitation de la mer (Ifremer)',
+      parent: 'French state body',
+      sponsor: 'France',
+    },
+    IOMPMN1: {
+      name: 'Interoceanmetal Joint Organization',
+      parent: 'Intergovernmental organisation of its six member states',
+      sponsor: 'Bulgaria, Cuba, Czechia, Poland, Russia, Slovakia',
+    },
+    KOREAPMN1: {
+      name: 'Government of the Republic of Korea',
+      parent: 'State contractor; implemented by KIOST',
+      // a state contractor has no sponsoring state
+    },
+    MARAWAPMN1: {
+      name: 'Marawa Research and Exploration Ltd.',
+      parent: 'Kiribati government body',
+      sponsor: 'Kiribati',
+    },
+    NORIPMN1: { name: 'Nauru Ocean Resources Inc.', parent: 'TMC the metals company Inc.', sponsor: 'Nauru' },
+    OMSPMN1: { name: 'Ocean Mineral Singapore Pte. Ltd.', parent: 'Keppel Ltd', sponsor: 'Singapore' },
+    TOMLPMN1: { name: 'Tonga Offshore Mining Limited', parent: 'TMC the metals company Inc.', sponsor: 'Tonga' },
+    UKSRLPMN1: {
+      // Lockheed Martin sold it in 2023, Loke went bankrupt in 2025, Glomar took it over
+      name: 'UK Seabed Resources Ltd.',
+      parent: 'Glomar Minerals',
+      sponsor: 'United Kingdom',
+    },
+    UKSRLPMN2: { name: 'UK Seabed Resources Ltd.', parent: 'Glomar Minerals', sponsor: 'United Kingdom' },
+    YUZHPMN1: { name: 'JSC Yuzhmorgeologiya', parent: 'Rosgeo', sponsor: 'Russian Federation' },
   },
 
   // ISA area types. "title" stands in for the company where an area has none.
