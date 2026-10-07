@@ -9,7 +9,7 @@ window.CONFIG = {
     title:
       'US deep-sea mining applications compete with internationally managed areas in the CCZ',
     deck:
-      'Several companies have applied to the U.S. government under the U.S. law for rights to ' +
+      'Several companies have applied to the U.S. government under U.S. law for rights to ' +
       'explore and exploit areas of the deep seabed in international waters, with most interest ' +
       'concentrated on the Clarion Clipperton Zone (CCZ), an abyssal plain in the Pacific Ocean. ' +
       'Some areas requested by U.S. applicants overlap with areas managed by the International ' +
