@@ -10,7 +10,7 @@ Reads:
     ISA_Areas/ISA_Areas_{Exploration,Reserve,Impossible_Metals,APEIs}.geojson
 
 Writes (into this repo's data/ folder):
-    ccz.geojson        the Clarion-Clipperton Zone outline
+    ccz.geojson        the Clarion Clipperton Zone outline
     us_areas.geojson   US application and licence areas, one feature per subarea
     isa_areas.geojson  ISA contracts, reserved areas, applications and APEIs, one feature per subarea
     overlaps.geojson   every place where a US area overlaps an ISA area or another US area
@@ -174,7 +174,7 @@ def main(data_dir):
     # CCZ outline, copied through
     ccz_rows = read_layer(os.path.join(data_dir, 'ccz.geojson'))
     ccz = union([g for _, g in ccz_rows])
-    write('ccz.geojson', [feature('ccz', {'name': 'Clarion-Clipperton Zone'}, ccz)])
+    write('ccz.geojson', [feature('ccz', {'name': 'Clarion Clipperton Zone'}, ccz)])
 
     # US areas
     us = []  # (id, props, geom)

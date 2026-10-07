@@ -5,13 +5,15 @@
 window.CONFIG = {
   /* ---- panel copy ------------------------------------------------------- */
   text: {
+    // Mongabay style: the heading drops the periods ("US"); every other string keeps them ("U.S.")
     title:
-      'US deep-sea mining applications competing with internationally managed areas ' +
-      'within the Clarion Clipperton Zone',
+      'US deep-sea mining applications compete with internationally managed areas in the CCZ',
     deck:
-      'Several companies have applied under US law for exploration and exploitation of the ' +
-      'Clarion-Clipperton Zone, in the Pacific Ocean. A significant overlap lies on areas ' +
-      'managed by the International Seabed Authority (ISA).',
+      'Several companies have applied to the U.S. government under the U.S. law for rights to ' +
+      'explore and exploit areas of the deep seabed in international waters, with most interest ' +
+      'concentrated on the Clarion Clipperton Zone (CCZ), an abyssal plain in the Pacific Ocean. ' +
+      'Some areas requested by U.S. applicants overlap with areas managed by the International ' +
+      'Seabed Authority (ISA).',
     hintHover: 'Hover over an area to see its details.',
     hintTap: 'Tap an area to see its details.',
     footnote: '*Includes two exploration licenses granted in 1984, now held by Lockheed Martin.',
@@ -24,21 +26,23 @@ window.CONFIG = {
 
   /* ---- popup labels ------------------------------------------------------ */
   labels: {
-    usBand: 'US application area',    // colored strip at the top of US popups
+    usBand: 'U.S. application area', // colored strip at the top of U.S. popups
     isaBand: 'ISA managed area',      // colored strip at the top of ISA popups
     overlapBand: 'Overlap',           // colored strip at the top of overlap popups
     company: 'Company:',
     parent: 'Parent or owner',
     sponsor: 'Sponsoring state',      // ISA areas
-    authority: 'Licensing authority', // US areas, which have no sponsoring state
+    authority: 'Licensing authority', // U.S. areas, which have no sponsoring state
     areaName: 'Area name',
     status: 'Status',
     federalRegister: 'Federal Register',
     posted: 'Posted {date}',
     notPosted: 'Not posted yet',
     area: 'Area',
+    none: 'None',       // the company genuinely has no parent, sponsor or equivalent
+    unknown: 'Unknown',  // the information is not public
   },
-  governingBodies: { us: 'US', isa: 'ISA' }, // named after each area in overlap popups
+  governingBodies: { us: 'U.S.', isa: 'ISA' }, // named after each area in overlap popups
 
   /* ---- basemap and view -------------------------------------------------- */
   map: {
@@ -58,12 +62,12 @@ window.CONFIG = {
   /* ---- layer styles and legend ------------------------------------------ */
   layers: {
     us: {
-      label: 'US application areas*',
-      note: 'Applications and licenses under US law',
-      color: '#530E0D',       // adjust US hatch color here (also the US popup strip)
+      label: 'U.S. application areas*',
+      note: 'Applications and licenses under U.S. law',
+      color: '#530E0D',       // adjust U.S. hatch color here (also the U.S. popup strip)
       hatchTile: 7,           // adjust the gap between hatch lines here (px, larger is sparser)
       hatchWidth: 1,          // adjust hatch line thickness here (px)
-      edgeWidth: 0.6,         // adjust the hairline around US areas here (0 removes it)
+      edgeWidth: 0.6,         // adjust the hairline around U.S. areas here (0 removes it)
       visible: true,
     },
     isa: {
@@ -77,25 +81,27 @@ window.CONFIG = {
     },
     overlaps: {
       label: 'Overlaps',
-      note: 'US areas overlapping ISA areas or each other',
+      note: 'U.S. areas overlapping ISA areas or each other',
       fill: '#E86D6D',        // adjust overlap color here
       fillOpacity: 1,
       visible: true,
     },
     ccz: {
-      label: 'Clarion-Clipperton Zone',
-      fill: '#FFFFFF',        // adjust CCZ tint here
-      fillOpacity: 0.08,
+      label: 'Clarion Clipperton Zone',
+      fill: '#FFFFFF',        // CCZ tint; fillOpacity 0 leaves the zone unfilled
+      fillOpacity: 0,
       outline: '#FFFFFF',     // adjust CCZ outline color here
       outlineOpacity: 0.8,
       outlineWidth: 1.1,      // adjust CCZ outline thickness here
       outlineDash: [3, 2],    // adjust dash and gap length here (multiples of the thickness)
     },
     eez: {
-      // Legend only: the EEZ lines come from the Mapbox style's "eez" layer,
-      // so keep this color in step with that layer
+      // The lines come from the Mapbox style's "eez" layer, which the map recolors to this;
+      // the fill is added on the same tileset
       label: 'Exclusive economic zones',
-      color: '#A8A8A8',
+      color: '#FFFFFF',       // adjust EEZ line color here
+      fill: '#FFFFFF',        // adjust EEZ fill color here
+      fillOpacity: 0.2,       // adjust how strongly national waters are washed in
     },
     hover: {
       color: '#092F29',       // adjust the outline of the area under the cursor here
@@ -107,12 +113,12 @@ window.CONFIG = {
   /* ---- names and statuses ------------------------------------------------ */
   // Keys match the "company" property in data/us_areas.geojson and data/isa_areas.geojson.
   companies: {
-    // US applicants and license holders, as the Federal Register and the companies' own
+    // U.S. applicants and license holders, as the Federal Register and the companies' own
     // applications name them (fact-checked 23 Sep 2026; see the project's
     // Stuff/entity_names_factcheck.xlsx for sources and open questions).
     // federalRegister: month and year the application was posted in the Federal Register,
     // false if not posted yet, or dates per application keyed by the start of the area name.
-    // Leave it out to skip that line (Lockheed Martin holds licenses, not applications).
+    // federalRegisterText replaces that line with its own wording.
     TMC: {
       name: 'The Metals Company USA, LLC',
       parent: 'TMC the metals company Inc.',
@@ -137,28 +143,31 @@ window.CONFIG = {
     AOM: {
       // Confirmed 23 Sep 2026: the polygons come from the company's own licence-areas map
       // (aomusa.com/license-areas), so this is American Ocean Minerals Corporation of Tampa,
-      // not the unrelated Deep Sea Minerals Corp., whose US subsidiary carried the same name
+      // not the unrelated Deep Sea Minerals Corp., whose U.S. subsidiary carried the same name
       // until 9 Apr 2026. Its merger with Odyssey Marine Exploration was still pending.
       name: 'American Ocean Minerals Corporation',
-      parent: 'Merging into Odyssey Marine Exploration (Nasdaq: OMEX)',
+      parent: 'Merging with Odyssey Marine Exploration',
       authority: 'United States (NOAA)',
       status: 'Applied',
       federalRegister: false,
     },
     ECO: {
       name: 'Eco Minerals, Inc.',
-      parent: 'None; formerly Deep Sea Rare Minerals, Inc.',
+      parent: 'None',
       authority: 'United States (NOAA)',
       status: 'Applied',
       federalRegister: false,
     },
     LM: {
       name: 'Lockheed Martin Corporation',
+      parent: 'None',
       authority: 'United States (NOAA)',
       status: 'Granted',
+      // holds licenses rather than an application, so the Federal Register line is written out
+      federalRegisterText: 'License extensions posted August 2022',
     },
 
-    // ISA applicant: the US cannot sponsor at the ISA, so the American parent applied
+    // ISA applicant: the U.S. cannot sponsor at the ISA, so the American parent applied
     // through a Bahraini subsidiary
     IM: {
       name: 'Impossible Metals Bahrain W.L.L.',
@@ -180,7 +189,7 @@ window.CONFIG = {
       parent: 'Cook Islands government body',
       sponsor: 'Cook Islands',
     },
-    CMMPMN1: { name: 'China Minmetals Corporation', parent: 'Chinese state enterprise', sponsor: 'China' },
+    CMMPMN1: { name: 'China Minmetals Corporation', parent: 'Chinese state body', sponsor: 'China' },
     COMRAPMN1: {
       name: 'China Ocean Mineral Resources Research and Development Association',
       parent: 'Chinese state body',
@@ -230,6 +239,9 @@ window.CONFIG = {
     exploration: { title: 'ISA exploration contract', status: 'Granted' },
     application: { title: 'ISA application', status: 'Applied' },
     reserved: { title: 'Reserved area', status: 'Reserved for developing states' },
-    apei: { title: 'Protected area (APEI)', status: 'Protected from mining' },
+    apei: {
+      title: 'Area of Particular Environmental Interest (APEI)',
+      status: 'Protected from mining',
+    },
   },
 };

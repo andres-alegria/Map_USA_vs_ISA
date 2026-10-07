@@ -74,7 +74,8 @@
           stroke-dasharray="2.4 1.6"/>`;
     } else if (key === 'eez') {
       body = `<rect width="18" height="18" rx="4" fill="${L.water}"/>
-        <rect x="3" y="3" width="12" height="12" rx="1.5" fill="none" stroke="${L.eez.color}" stroke-width="1"/>`;
+        <rect x="3" y="3" width="12" height="12" rx="1.5" fill="${L.eez.fill}"
+          fill-opacity="${L.eez.fillOpacity}" stroke="${L.eez.color}" stroke-width="1"/>`;
     }
     return `<svg class="swatch" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">${body}</svg>`;
   }
@@ -203,6 +204,21 @@
     const hovered = ['boolean', ['feature-state', 'hover'], false];
     const vis = (key) => (visible[key] ? 'visible' : 'none');
 
+    // National waters, drawn from the basemap's own EEZ tileset: a wash inside the boundary,
+    // and that boundary recolored to match. Added under the style's "eez" line, so it stays
+    // below everything this map draws.
+    const eezLine = map.getStyle().layers.find((l) => l.id === 'eez');
+    if (eezLine) {
+      map.addLayer({
+        id: 'eez-fill',
+        type: 'fill',
+        source: eezLine.source,
+        'source-layer': eezLine['source-layer'],
+        paint: { 'fill-color': L.eez.fill, 'fill-opacity': L.eez.fillOpacity },
+      }, 'eez');
+      map.setPaintProperty('eez', 'line-color', L.eez.color);
+    }
+
     map.addSource('ccz', { type: 'geojson', data: ccz });
     map.addSource('isa', { type: 'geojson', data: isa, promoteId: 'id' });
     map.addSource('us', { type: 'geojson', data: us, promoteId: 'id' });
@@ -290,6 +306,7 @@
 
   // Federal Register line for a US application, or null to leave it out
   function federalRegister(company, areaName) {
+    if (company.federalRegisterText) return company.federalRegisterText;
     const fr = company.federalRegister;
     if (fr === undefined) return null;
     let date = fr;
@@ -335,15 +352,19 @@
     const d = describe(p);
     const row = (label, value, cls = '') => (value
       ? `<dt>${esc(label)}</dt><dd class="${cls}">${esc(value)}</dd>` : '');
+    // A company's popup shows every category, falling back where there is genuinely nothing
+    // to show; reserved areas and APEIs have no company, so they list only what applies.
+    const field = (label, value, fallback, cls = '') =>
+      row(label, d.isCompany ? value || fallback : value, cls);
     return `<div class="pop-item is-${d.group}">
       <div class="pop-band">${esc(d.group === 'us' ? C.labels.usBand : C.labels.isaBand)}</div>
       ${d.isCompany ? `<p class="pop-label">${esc(C.labels.company)}</p>` : ''}
       <h3 class="pop-title">${esc(d.title)}</h3>
       <dl class="pop-rows">
-        ${row(C.labels.parent, d.parent)}
-        ${row(d.stateLabel, d.state)}
-        ${row(C.labels.areaName, p.area_name)}
-        ${row(C.labels.status, d.status)}
+        ${field(C.labels.parent, d.parent, C.labels.none)}
+        ${field(d.stateLabel, d.state, C.labels.none)}
+        ${field(C.labels.areaName, p.area_name, C.labels.unknown)}
+        ${field(C.labels.status, d.status, C.labels.unknown)}
         ${row(C.labels.federalRegister, d.federalRegister)}
         ${row(C.labels.area, areaText(p), 'nowrap')}
       </dl>

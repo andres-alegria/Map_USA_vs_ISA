@@ -1,7 +1,7 @@
 # US deep-sea mining applications and ISA areas
 
 Interactive map for a Mongabay story. It shows where seabed areas sought or held under US law in the
-Clarion-Clipperton Zone (CCZ) overlap areas managed by the International Seabed Authority (ISA).
+Clarion Clipperton Zone (CCZ) overlap areas managed by the International Seabed Authority (ISA).
 
 ## What the map shows
 
@@ -11,7 +11,7 @@ Clarion-Clipperton Zone (CCZ) overlap areas managed by the International Seabed 
   and the protected areas (APEIs).
 - **Overlaps** (red): every place where a US area overlaps an ISA area or another US area.
   Pieces under 50 km² are left out as digitising slivers.
-- **Clarion-Clipperton Zone** dashed outline and **exclusive economic zone** lines as background.
+- **Clarion Clipperton Zone** dashed outline and **exclusive economic zone** lines as background.
 
 Hover over an area (tap on phones) for company, area name, status, area in km² and mi², and for US
 applications whether they have been posted in the Federal Register. A colored strip on each box says
