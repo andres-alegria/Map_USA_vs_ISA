@@ -63,7 +63,11 @@ window.CONFIG = {
   layers: {
     us: {
       label: 'U.S. application areas*',
-      note: 'Applications and licenses under U.S. law',
+      // the two notes list their kinds in the same order: granted instrument, then
+      // applications, then the rest. "Licenses" and "contracts" are not interchangeable:
+      // NOAA issues licenses under DSHMRA, while an approved ISA plan of work takes the
+      // form of a contract with the Authority (UNCLOS Annex III, art. 3(5)).
+      note: 'Licenses and applications under U.S. law',
       color: '#530E0D',       // adjust U.S. hatch color here (also the U.S. popup strip)
       hatchTile: 7,           // adjust the gap between hatch lines here (px, larger is sparser)
       hatchWidth: 1,          // adjust hatch line thickness here (px)
@@ -72,7 +76,7 @@ window.CONFIG = {
     },
     isa: {
       label: 'ISA managed areas',
-      note: 'Contracts, reserved areas, applications and protected areas',
+      note: 'Contracts, applications, reserved areas and protected areas',
       fill: '#D5DAD9',        // adjust ISA fill color here
       fillOpacity: 0.9,       // adjust how solid the ISA fill looks here
       outline: '#9AA6A4',     // adjust the lines between ISA subareas here
