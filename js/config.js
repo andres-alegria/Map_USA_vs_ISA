@@ -16,7 +16,7 @@ window.CONFIG = {
       'Seabed Authority (ISA).',
     hintHover: 'Hover over an area to see its details.',
     hintTap: 'Tap an area to see its details.',
-    footnote: '*Includes two exploration licenses granted in 1984, now held by Lockheed Martin.',
+    footnote: '*Includes two exploration licenses granted in 1984, held by Lockheed Martin.',
     // shown in the popup of any area drawn outside the CCZ boundary
     outsideCcz: 'This is the only area on this map that falls outside the Clarion Clipperton Zone.',
     sources:
@@ -62,12 +62,13 @@ window.CONFIG = {
   /* ---- layer styles and legend ------------------------------------------ */
   layers: {
     us: {
-      label: 'U.S. application areas*',
-      // the two notes list their kinds in the same order: granted instrument, then
+      label: 'U.S. areas',
+      // the asterisk on "Licenses" is picked up by text.footnote below; the two notes
+      // list their kinds in the same order: granted instrument, then
       // applications, then the rest. "Licenses" and "contracts" are not interchangeable:
       // NOAA issues licenses under DSHMRA, while an approved ISA plan of work takes the
       // form of a contract with the Authority (UNCLOS Annex III, art. 3(5)).
-      note: 'Licenses and applications under U.S. law',
+      note: 'Licenses* and applications under U.S. law',
       color: '#530E0D',       // adjust U.S. hatch color here (also the U.S. popup strip)
       hatchTile: 7,           // adjust the gap between hatch lines here (px, larger is sparser)
       hatchWidth: 1,          // adjust hatch line thickness here (px)
@@ -75,8 +76,8 @@ window.CONFIG = {
       visible: true,
     },
     isa: {
-      label: 'ISA managed areas',
-      note: 'Contracts, applications, reserved areas and protected areas',
+      label: 'ISA areas',
+      note: 'Contracts, applications, reserved areas and protected areas managed by the ISA',
       fill: '#D5DAD9',        // adjust ISA fill color here
       fillOpacity: 0.9,       // adjust how solid the ISA fill looks here
       outline: '#9AA6A4',     // adjust the lines between ISA subareas here
