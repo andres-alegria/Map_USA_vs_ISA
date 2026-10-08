@@ -418,18 +418,10 @@ body {
     margin-bottom: 14px;
   }
 
-  /* compact legend: labels only */
+  /* legend rows keep their notes here, so they stay top-aligned like the wide
+     layout; only the row spacing tightens */
   .layer {
-    align-items: center;
-    padding: 6px 0;
-  }
-
-  .check {
-    margin-top: 0;
-  }
-
-  .layer-note {
-    display: none;
+    padding: 6px 0;             /* adjust the gap between legend rows on phones here */
   }
 
   .map-wrap {
