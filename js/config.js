@@ -16,7 +16,13 @@ window.CONFIG = {
       'Seabed Authority (ISA).',
     hintHover: 'Hover over an area to see its details.',
     hintTap: 'Tap an area to see its details.',
-    footnote: '*Includes two exploration licenses granted in 1984, held by Lockheed Martin.',
+    // the \u00a0 keep each figure together with its unit when the line wraps
+    footnote:
+      '*Includes two exploration licenses granted in 1984, held by Lockheed Martin. ' +
+      'Does not include one application known at the time of publication: Vancouver-based ' +
+      'Deep Sea Minerals Corp. announced its subsidiary had submitted an application to ' +
+      'explore 147,430\u00a0km\u00b2 (56,923\u00a0mi\u00b2) of the CCZ without supplying ' +
+      'geographic data for the proposed mining areas.',
     // shown in the popup of any area drawn outside the CCZ boundary
     outsideCcz: 'This is the only area on this map that falls outside the Clarion Clipperton Zone.',
     sources:
