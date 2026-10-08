@@ -68,13 +68,14 @@ window.CONFIG = {
   /* ---- layer styles and legend ------------------------------------------ */
   layers: {
     us: {
-      label: 'U.S. areas',
-      // the asterisk on "Licenses" is picked up by text.footnote below; the two notes
-      // list their kinds in the same order: granted instrument, then
-      // applications, then the rest. "Licenses" and "contracts" are not interchangeable:
-      // NOAA issues licenses under DSHMRA, while an approved ISA plan of work takes the
-      // form of a contract with the Authority (UNCLOS Annex III, art. 3(5)).
-      note: 'Licenses* and applications under U.S. law',
+      label: 'U.S. areas*',
+      // the asterisk sits on the label because text.footnote qualifies the whole
+      // layer, not one kind of area in it. The two notes list their kinds in the
+      // same order: granted instrument, then applications, then the rest.
+      // "Licenses" and "contracts" are not interchangeable: NOAA issues licenses
+      // under DSHMRA, while an approved ISA plan of work takes the form of a
+      // contract with the Authority (UNCLOS Annex III, art. 3(5)).
+      note: 'Licenses and applications under U.S. law',
       color: '#530E0D',       // adjust U.S. hatch color here (also the U.S. popup strip)
       hatchTile: 7,           // adjust the gap between hatch lines here (px, larger is sparser)
       hatchWidth: 1,          // adjust hatch line thickness here (px)
