@@ -76,6 +76,9 @@ body {
   grid-column: 1;
   grid-row: 2;
   padding: 10px var(--gutter) 14px;
+  /* marks where the box ends: it shares the page background with the panel beside it,
+     so without this the bottom of the page reads as one band the full width */
+  border-right: 1px solid var(--rule);
   font-size: var(--size-small);
   line-height: 1.4;
   color: var(--ink-muted);
@@ -452,5 +455,6 @@ body {
     grid-column: 1;
     grid-row: 3;
     padding-top: 10px;
+    border-right: none;   /* nothing sits beside it in the stacked layout */
   }
 }
