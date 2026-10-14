@@ -93,10 +93,23 @@ window.CONFIG = {
     },
     overlaps: {
       label: 'Overlaps',
-      note: 'U.S. areas overlapping ISA areas or each other',
-      fill: '#E86D6D',        // adjust overlap color here
+      // No note of its own: the kinds below say what each overlap is with.
+      fill: '#E86D6D',        // adjust overlap color here, for every kind at once
       fillOpacity: 1,
       visible: true,
+      // The kinds deliberately share one color. They are a single condition — the same
+      // seabed claimed twice — told apart only by who the other claimant is, and five
+      // colors here would fight the U.S. hatch and the ISA fill. Each piece carries
+      // exactly one kind, assigned by precedence in scripts/build_data.py, so the areas
+      // never double-count. Listed in the same order as the ISA note above, with the
+      // U.S.-on-U.S. case last; the keys match the "kind" property in overlaps.geojson.
+      kinds: {
+        exploration: { label: 'With ISA exploration contracts' },
+        application: { label: 'With the ISA application' },
+        reserved: { label: 'With ISA reserved areas' },
+        apei: { label: 'With protected areas (APEIs)' },
+        'us-us': { label: 'With another U.S. area' },
+      },
     },
     ccz: {
       label: 'Clarion Clipperton Zone',

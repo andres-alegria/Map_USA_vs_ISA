@@ -24,6 +24,14 @@
   const visible = {};
   LEGEND_ORDER.forEach((key) => { visible[key] = C.layers[key].visible !== false; });
 
+  // Overlap kinds are sub-rows of the Overlaps toggle: the parent shows or hides the
+  // whole layer, each child filters its own kind out of it.
+  const OVERLAP_KINDS = Object.keys(C.layers.overlaps.kinds || {});
+  const kindOn = {};
+  OVERLAP_KINDS.forEach((k) => { kindOn[k] = true; });
+  const overlapFilter = () =>
+    ['in', ['get', 'kind'], ['literal', OVERLAP_KINDS.filter((k) => kindOn[k])]];
+
   const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   let map = null;
@@ -98,7 +106,24 @@
         ${L.note ? `<span class="layer-note">${esc(L.note)}</span>` : ''}
       </span>`;
     list.appendChild(row);
+    if (key === 'overlaps') addKindRows(L);
   });
+
+  // One indented row per overlap kind, with no swatch: they all carry the parent's color
+  function addKindRows(L) {
+    OVERLAP_KINDS.forEach((kind) => {
+      const row = document.createElement('label');
+      row.className = 'layer layer-child';
+      row.innerHTML = `
+        <input type="checkbox" ${kindOn[kind] ? 'checked' : ''} data-kind="${kind}">
+        <span class="check">${CHECK}</span>
+        <span></span>
+        <span class="layer-text">
+          <span class="layer-name">${esc(L.kinds[kind].label)}</span>
+        </span>`;
+      list.appendChild(row);
+    });
+  }
   // The CCZ and EEZ lines are background only: listed in the legend, never switched off
   ['ccz', 'eez'].forEach((key) => {
     const row = document.createElement('div');
@@ -272,6 +297,7 @@
     hoverLine('isa-hover', 'isa', L.hover.color, 'isa');
     hoverLine('overlap-hover', 'overlaps', L.hover.color, 'overlaps');
     hoverLine('us-hover', 'us', L.us.color, 'us');
+    applyOverlapFilter();   // in case a kind starts switched off
 
     // The CCZ boundary sits above the areas, so the reader can see which of them it contains
     map.addLayer({
@@ -286,16 +312,58 @@
   }
 
   function wireToggles() {
-    list.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+    list.querySelectorAll('input[data-key]').forEach((input) => {
       input.addEventListener('change', () => {
         const key = input.dataset.key;
-        visible[key] = input.checked;
-        input.closest('.layer').classList.toggle('is-off', !input.checked);
+        setLayerVisible(key, input.checked);
+        // the Overlaps row carries its kinds with it, so they leave and return together
+        if (key === 'overlaps') setAllKinds(input.checked);
         if (!layersReady) return; // addLayers() reads `visible` when the data arrives
-        const cat = CATEGORIES.find((c) => c.key === key);
-        cat.layers.forEach((id) => map.setLayoutProperty(id, 'visibility', input.checked ? 'visible' : 'none'));
+        if (key === 'overlaps') applyOverlapFilter();
         if (current && current.cat.key === key) clearPick();
       });
+    });
+
+    list.querySelectorAll('input[data-kind]').forEach((input) => {
+      input.addEventListener('change', () => {
+        kindOn[input.dataset.kind] = input.checked;
+        input.closest('.layer').classList.toggle('is-off', !input.checked);
+        // the parent follows its children: it goes out with the last one and
+        // comes back on its own as soon as any kind is switched back on
+        const any = OVERLAP_KINDS.some((k) => kindOn[k]);
+        const parent = list.querySelector('input[data-key="overlaps"]');
+        if (parent.checked !== any) {
+          parent.checked = any;
+          setLayerVisible('overlaps', any);
+        }
+        if (!layersReady) return;
+        applyOverlapFilter();
+        const shown = current && overlapsById.get(current.ids[0]);
+        if (current && current.cat.key === 'overlaps' && shown && !kindOn[shown.kind]) clearPick();
+      });
+    });
+  }
+
+  function setLayerVisible(key, on) {
+    visible[key] = on;
+    list.querySelector(`input[data-key="${key}"]`).closest('.layer').classList.toggle('is-off', !on);
+    if (!layersReady) return;
+    CATEGORIES.find((c) => c.key === key).layers
+      .forEach((id) => map.setLayoutProperty(id, 'visibility', on ? 'visible' : 'none'));
+  }
+
+  function setAllKinds(on) {
+    OVERLAP_KINDS.forEach((k) => { kindOn[k] = on; });
+    list.querySelectorAll('input[data-kind]').forEach((i) => {
+      i.checked = on;
+      i.closest('.layer').classList.toggle('is-off', !on);
+    });
+  }
+
+  function applyOverlapFilter() {
+    const f = overlapFilter();
+    ['overlap-fill', 'overlap-hover'].forEach((id) => {
+      if (map.getLayer(id)) map.setFilter(id, f);
     });
   }
 

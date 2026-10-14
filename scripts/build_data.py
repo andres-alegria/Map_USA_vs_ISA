@@ -39,6 +39,12 @@ MIN_OVERLAP_KM2 = 50.0            # overlap pieces smaller than this are treated
 REGION = (-161.0, -1.0, -110.0, 24.0)  # lon/lat window around the CCZ; ISA areas elsewhere are skipped
 PRECISION = 5                     # decimal places kept in output coordinates (~1 m)
 
+# Every overlap piece is filed under exactly one kind, so the kinds never double-count
+# the same seabed. Where a piece sits under more than one, the first of these wins: the
+# order runs from the most specific conflict to the least. Impossible Metals' pending ISA
+# application lies on reserved areas, for instance, and is reported as the application.
+OVERLAP_PRECEDENCE = ('apei', 'application', 'reserved', 'exploration')
+
 US_LAYERS = [  # file in US_Areas_CCZ/, company key used by js/config.js
     ('The_Metals_Company', 'TMC_USA.geojson', 'TMC'),
     ('American_Metal_Resources', 'American_Metal_Resources.geojson', 'AMR'),
@@ -254,6 +260,12 @@ def main(data_dir):
             grouped.setdefault(ids, []).append(part)
 
     order = {fid: n for n, (fid, _, _) in enumerate(us + isa)}
+    isa_kind = {fid: p['kind'] for fid, p, _ in isa}
+
+    def overlap_kind(members):
+        kinds = {isa_kind[m] for m in members if m in isa_kind}
+        return next((k for k in OVERLAP_PRECEDENCE if k in kinds), 'us-us')
+
     overlaps = []
     for ids, parts in grouped.items():
         geom = union([polys_only(p) for p in parts])
@@ -261,14 +273,22 @@ def main(data_dir):
         overlaps.append((members, geom, area_km2(geom)))
     overlaps.sort(key=lambda o: -o[2])
     write('overlaps.geojson', [
-        feature(f'ov-{n}', with_area({'group': 'overlap', 'members': '|'.join(m)}, g), g)
+        feature(f'ov-{n}', with_area({'group': 'overlap', 'kind': overlap_kind(m),
+                                      'members': '|'.join(m)}, g), g)
         for n, (m, g, _) in enumerate(overlaps, 1)
     ])
 
     # Report
     print(f'\nOverlaps kept (>= {MIN_OVERLAP_KM2:g} km2): {len(overlaps)}')
+    by_kind = {}
     for members, g, a in overlaps:
-        print(f'  {a:10,.0f} km2  width~{width_km(g):6.1f} km  {" + ".join(members)}')
+        k = overlap_kind(members)
+        by_kind[k] = [by_kind.get(k, [0, 0.0])[0] + 1, by_kind.get(k, [0, 0.0])[1] + a]
+        print(f'  {a:10,.0f} km2  width~{width_km(g):6.1f} km  [{k}]  {" + ".join(members)}')
+    print('  by kind:')
+    for k in OVERLAP_PRECEDENCE + ('us-us',):
+        n, a = by_kind.get(k, (0, 0.0))
+        print(f'    {k:<12} {n:>3} pieces {a:>10,.0f} km2')
     print(f'Sliver pieces dropped: {len(dropped)}, largest {max((a for _, a in dropped), default=0):.1f} km2, '
           f'total {sum(a for _, a in dropped):.1f} km2')
 

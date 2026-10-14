@@ -208,6 +208,20 @@ body {
   opacity: 0.45;
 }
 
+/* Overlap sub-rows: every kind is drawn in the same color, so only the indent and the
+   lighter type set them apart from the row they belong to. No swatch, no hairline.
+   Both selectors are needed so the narrow layout's own .layer padding does not win. */
+.layer.layer-child {
+  padding: 3px 0 3px 26px;      /* adjust the indent of the overlap sub-rows here */
+  border-top: none;
+}
+
+.layer-child .layer-name {
+  font-size: var(--size-small); /* adjust the sub-row type size here */
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
 .hint {
   margin: 10px 0 0;
   font-size: var(--size-small);
