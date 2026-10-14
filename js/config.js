@@ -11,7 +11,7 @@ window.CONFIG = {
     deck:
       'Several companies have applied to the U.S. government under U.S. law for rights to ' +
       'explore and exploit areas of the deep seabed in international waters, with most interest ' +
-      'concentrated on the Clarion Clipperton Zone (CCZ), an abyssal plain in the Pacific Ocean. ' +
+      'concentrated on the Clarion Clipperton Zone (CCZ). ' +
       'Some areas requested by U.S. applicants overlap with areas managed by the International ' +
       'Seabed Authority (ISA).',
     hintHover: 'Hover over an area to see its details.',
