@@ -94,7 +94,8 @@ window.CONFIG = {
       visible: true,
     },
     overlaps: {
-      label: 'Overlaps',
+      // the kinds below read on from this label, so each one opens lower case
+      label: 'U.S. areas overlapping',
       // No note of its own: the kinds below say what each overlap is with.
       fill: '#E86D6D',        // adjust overlap color here, for every kind at once
       fillOpacity: 1,
@@ -106,11 +107,11 @@ window.CONFIG = {
       // never double-count. Listed in the same order as the ISA note above, with the
       // U.S.-on-U.S. case last; the keys match the "kind" property in overlaps.geojson.
       kinds: {
-        exploration: { label: 'With ISA exploration contracts' },
-        application: { label: 'With the ISA application' },
-        reserved: { label: 'With ISA reserved areas' },
-        apei: { label: 'With protected areas (APEIs)' },
-        'us-us': { label: 'With another U.S. area' },
+        exploration: { label: 'with ISA exploration contracts' },
+        application: { label: 'with the ISA application' },
+        reserved: { label: 'with ISA reserved areas' },
+        apei: { label: 'with protected areas (APEIs)' },
+        'us-us': { label: 'with another U.S. area' },
       },
     },
     ccz: {
