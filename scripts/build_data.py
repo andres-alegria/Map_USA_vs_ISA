@@ -50,7 +50,9 @@ US_LAYERS = [  # file in US_Areas_CCZ/, company key used by js/config.js
     ('American_Metal_Resources', 'American_Metal_Resources.geojson', 'AMR'),
     ('SEAX', 'SEAX.geojson', 'SEAX'),
     ('American_Ocean_Minerals', 'American_Ocean_Minerals.geojson', 'AOM'),
-    ('Eco_Minerals', 'Eco_Minerals.geojson', 'ECO'),
+    # the amended application, FR 2026-10-13: nine areas with published coordinates,
+    # replacing the seven we carried before
+    ('Eco_Minerals', 'Eco_Minerals_amended_2026-10.geojson', 'ECO'),
     ('Lockheed_Martin', 'Lockheed_Martin.geojson', 'LM'),
 ]
 
@@ -120,6 +122,17 @@ def union(geoms):
     return polys_only(mp.UnaryUnion())
 
 
+def within_window(g, region=REGION):
+    """True when an area reaches into the map's CCZ window at all.
+
+    Eco Minerals' Area 1, between Guam and Wake Island, is the only requested area
+    that falls outside it. The map leaves it off and the footnote says so, rather
+    than zooming out across the whole Pacific for one 7,500 km2 block.
+    """
+    x0, x1, y0, y1 = g.GetEnvelope()
+    return not (x1 < region[0] or x0 > region[2] or y1 < region[1] or y0 > region[3])
+
+
 def read_layer(path, region=None):
     ds = ogr.Open(path)
     lyr = ds.GetLayer()
@@ -184,15 +197,23 @@ def main(data_dir):
 
     # US areas
     us = []  # (id, props, geom)
+    off_map = []
     for slug, fname, key in US_LAYERS:
-        for i, (items, g) in enumerate(read_layer(os.path.join(data_dir, 'US_Areas_CCZ', fname)), 1):
-            fid = f'us-{key.lower()}-{i}'
+        kept = 0
+        for items, g in read_layer(os.path.join(data_dir, 'US_Areas_CCZ', fname)):
+            if not within_window(g):
+                off_map.append((key, items.get('subarea'), area_km2(g)))
+                continue
+            kept += 1
+            fid = f'us-{key.lower()}-{kept}'
             props = with_area({'group': 'us', 'company': key,
                                'area_name': us_area_name(key, items.get('subarea'))}, g)
             # an area drawn mostly beyond the CCZ boundary; the map says so in its popup
             if area_km2(polys_only(g.Intersection(ccz))) < area_km2(g) / 2:
                 props['outside_ccz'] = True
             us.append((fid, props, g))
+    for key, sub, a in off_map:
+        print(f'  left off the map, outside the window: {key} {sub} ({a:,.0f} km2)')
     write('us_areas.geojson', [feature(fid, p, g) for fid, p, g in us])
     outside = [fid for fid, p, _ in us if p.get('outside_ccz')]
     print(f'  areas outside the CCZ: {len(outside)} {outside}')

@@ -22,9 +22,11 @@ window.CONFIG = {
       'Does not include one application known at the time of publication: Vancouver-based ' +
       'Deep Sea Minerals Corp. announced its subsidiary had submitted an application to ' +
       'explore 147,430\u00a0km\u00b2 (56,923\u00a0mi\u00b2) of the CCZ without supplying ' +
-      'geographic data for the proposed mining areas.',
+      'geographic data for the proposed mining areas. A ninth area requested by Eco ' +
+      'Minerals, 7,467\u00a0km\u00b2 (2,883\u00a0mi\u00b2) between Guam and Wake Island, ' +
+      'lies too far west to show here.',
     // shown in the popup of any area drawn outside the CCZ boundary
-    outsideCcz: 'This is the only area on this map that falls outside the Clarion Clipperton Zone.',
+    outsideCcz: 'This area falls outside the Clarion Clipperton Zone.',
     sources:
       'Sources: International Seabed Authority; NOAA and Federal Register notices; company documents.',
     missingToken: 'The map needs a Mapbox access token. See README.md.',
@@ -177,11 +179,15 @@ window.CONFIG = {
       federalRegister: false,
     },
     ECO: {
+      // The amended application NOAA published on 13 Oct 2026 is filed in the name of
+      // Deep Sea Rare Minerals, Inc.; "Eco Minerals, Inc." is the name on NOAA's own
+      // notice and the one used here. Its nine areas carry published coordinates, the
+      // first official geometry for this applicant.
       name: 'Eco Minerals, Inc.',
       parent: 'None',
       authority: 'United States (NOAA)',
       status: 'Applied',
-      federalRegister: false,
+      federalRegister: 'October 2026',
     },
     LM: {
       name: 'Lockheed Martin Corporation',
