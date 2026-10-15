@@ -22,7 +22,7 @@ window.CONFIG = {
       'Does not include one application known at the time of publication: Vancouver-based ' +
       'Deep Sea Minerals Corp. announced its subsidiary had submitted an application to ' +
       'explore 147,430\u00a0km\u00b2 (56,923\u00a0mi\u00b2) of the CCZ without supplying ' +
-      'geographic data for the proposed mining areas. A ninth area requested by Eco ' +
+      'geographic data for the proposed mining areas. Another area requested by Eco ' +
       'Minerals, 7,467\u00a0km\u00b2 (2,883\u00a0mi\u00b2) between Guam and Wake Island, ' +
       'lies too far west to show here.',
     // shown in the popup of any area drawn outside the CCZ boundary
