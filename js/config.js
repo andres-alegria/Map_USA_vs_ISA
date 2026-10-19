@@ -108,10 +108,10 @@ window.CONFIG = {
       // U.S.-on-U.S. case last; the keys match the "kind" property in overlaps.geojson.
       kinds: {
         exploration: { label: 'with ISA exploration contracts' },
-        application: { label: 'with the ISA application' },
+        application: { label: 'with ISA applications' },
         reserved: { label: 'with ISA reserved areas' },
         apei: { label: 'with protected areas (APEIs)' },
-        'us-us': { label: 'with another U.S. area' },
+        'us-us': { label: 'with other U.S. areas' },
       },
     },
     ccz: {
