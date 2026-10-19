@@ -28,7 +28,8 @@ window.CONFIG = {
     // shown in the popup of any area drawn outside the CCZ boundary
     outsideCcz: 'This area falls outside the Clarion Clipperton Zone.',
     sources:
-      'Sources: International Seabed Authority; NOAA and Federal Register notices; company documents.',
+      'Sources: International Seabed Authority; NOAA and Federal Register notices; ' +
+      'company documents. Last updated 19\u00a0Oct\u00a02026.',
     missingToken: 'The map needs a Mapbox access token. See README.md.',
   },
 
