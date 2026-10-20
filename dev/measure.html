@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Measure the embed's text heights</title>
+  <style>
+    body { margin: 0; font: 13px/1.5 ui-monospace, monospace; }
+    #frame { border: 0; display: block; }
+    #out { padding: 12px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <!-- One frame, resized synchronously: reading the layout straight after setting the width is exact,
+       and it avoids reloading the basemap once per width. Serve the repo root and open /dev/measure.html.
+       Measure with js/mapbox-token.js moved aside, so no tiles load; the panel and footnote are built
+       before the token check, so their heights are unaffected. -->
+  <iframe id="frame" src="/?fill=1" height="900"></iframe>
+  <div id="out">measuring…</div>
+  <script>
+    const LO = 276, HI = 820, STEP = 2;
+    const frame = document.getElementById('frame');
+    frame.addEventListener('load', () => {
+      const d = frame.contentDocument;
+      const panel = d.querySelector('.panel');
+      const foot = d.querySelector('.foot');
+      const out = {};
+      for (let w = LO; w <= HI; w += STEP) {
+        frame.width = w;
+        out[w] = Math.ceil(panel.getBoundingClientRect().height + foot.getBoundingClientRect().height);
+      }
+      frame.width = 780;
+      document.getElementById('out').textContent = JSON.stringify(out);
+      window.MEASURED = out;
+    });
+  </script>
+</body>
+</html>

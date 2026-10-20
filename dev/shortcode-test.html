@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CCZ map shortcode &middot; test page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400&display=swap" rel="stylesheet">
+  <style>
+    /* a stand-in for a Mongabay article: the theme's .ph--40 container and 780 px column, Public Sans 16/24 */
+    body { margin: 0; background: #fff; color: #092f29; font: 16px/24px "Public Sans", sans-serif; }
+    .ph--40 { max-width: 1280px; margin: 0 auto; padding: 24px clamp(20px, 1px + 5vw, 40px); }
+    .inner { max-width: 780px; margin: 0 auto; }
+    .inner p { margin: 0 0 24px; }
+    .probe { background: #ffe9e6; }
+  </style>
+</head>
+<body>
+  <div class="ph--40"><div class="inner">
+    <p>The paragraph above the embed. The frame below is sized by the formula in its style attribute, with
+      no script on the page.</p>
+    <iframe src="http://localhost:8772/?fill=1" title="US deep-sea mining applications and internationally managed areas in the CCZ (interactive map)"
+      style="display:block; width:100%; height:calc(1183px + clamp(320px, 0.55 * min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)), 440px) - 3.25 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 306.5px, 20px) - 4.0 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 326.5px, 10px) - 2.3333 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 336.5px, 18px) - 8.75 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 354.5px, 4px) - 0.8864 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 358.5px, 44px) - 1.9524 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 402.5px, 42px) - 0.6333 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 444.5px, 90px) - 0.75 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 534.5px, 108px) - 0.3881 * clamp(0px, min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 642.5px, 100.5px) + clamp(0px, (min(780px, 100vw - 2 * clamp(20px, 1px + 5vw, 40px)) - 743px) * 100000, 38px)); margin:40px 0; border:0;"
+      scrolling="no" loading="lazy"></iframe>
+    <p class="probe">The paragraph under the embed. Its top edge should sit 40 px below the footnote line
+      inside the frame, with no white band in between.</p>
+    <p>A second paragraph, so the spacing reads the way it would in a story.</p>
+  </div></div>
+</body>
+</html>

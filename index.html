@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- ?fill=1 is the article-embed mode: the page fills the frame and the map takes up
+       whatever the panel and footnote leave, so a frame that is a little too tall only
+       makes the map taller instead of leaving a gap under it. Set before first paint. -->
+  <script>if (location.search.includes('fill=1')) document.documentElement.classList.add('is-embedded');</script>
   <title>US deep-sea mining applications and the ISA</title>
 
   <!-- fonts: Public Sans for text, Rowan for the title (swap here) -->

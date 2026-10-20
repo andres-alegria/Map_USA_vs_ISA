@@ -412,6 +412,42 @@ body {
   margin-bottom: 2px;
 }
 
+/* ---- article embed (?fill=1) --------------------------------------------
+   Inside a story column the frame is never wider than the column, so the panel
+   always sits above the map and the map gets the full width. The grid fills the
+   frame and the map row is the flexible one, which is what keeps spare frame
+   height out of the gap below the footnote. */
+@media (max-width: 820px) {
+  .is-embedded .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(220px, 1fr) auto;  /* adjust the map's floor here */
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+
+  .is-embedded .panel {
+    grid-column: 1;
+    grid-row: 1;
+    overflow: visible;
+    padding-bottom: 10px;
+  }
+
+  .is-embedded .map-wrap {
+    grid-column: 1;
+    grid-row: 2;
+    height: auto;
+    min-height: 0;
+  }
+
+  .is-embedded .foot {
+    grid-column: 1;
+    grid-row: 3;
+    border-right: none;   /* nothing sits beside it here */
+    padding-top: 8px;
+  }
+}
+
 /* ---- phones and narrow embeds: panel above the map, sources below ---- */
 @media (max-width: 760px) {
   :root {
