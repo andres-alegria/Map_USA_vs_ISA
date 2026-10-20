@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Measure the full-bleed embed</title>
+  <style>body{margin:0;font:13px/1.5 ui-monospace,monospace}#frame{border:0;display:block}#out{padding:12px;white-space:pre-wrap}</style>
+</head>
+<body>
+  <!-- Full bleed: the frame is as wide as the browser, so the layout switches to two columns on a desktop.
+       Below 820 px the panel sits above the map (one column) and we need panel + footnote;
+       at 820 px and up the panel is a fixed 400 px column beside the map, so we need the taller of
+       the panel's own content and the footnote, which sits under the map. -->
+  <iframe id="frame" src="/?fill=1" height="1400"></iframe>
+  <div id="out">measuring…</div>
+  <script>
+    const frame = document.getElementById('frame');
+    frame.addEventListener('load', () => {
+      const d = frame.contentDocument;
+      const panel = d.querySelector('.panel');
+      const foot = d.querySelector('.foot');
+      const stacked = {}, wide = {};
+      for (let w = 280; w <= 818; w += 2) {
+        frame.width = w;
+        stacked[w] = Math.ceil(panel.getBoundingClientRect().height + foot.getBoundingClientRect().height);
+      }
+      for (let w = 820; w <= 2000; w += 10) {
+        frame.width = w;
+        wide[w] = [Math.ceil(panel.scrollHeight), Math.ceil(foot.getBoundingClientRect().height),
+                   Math.round(panel.getBoundingClientRect().width)];
+      }
+      frame.width = 1280;
+      window.MEASURED = { stacked, wide };
+      document.getElementById('out').textContent =
+        'stacked ' + Object.keys(stacked).length + ' widths, wide ' + Object.keys(wide).length + ' widths';
+    });
+  </script>
+</body>
+</html>
